@@ -1,0 +1,55 @@
+Import-Module ActiveDirectory
+$DaysInactive = 30
+$CutoffDate = (Get-Date).AddDays(-$DaysInactive)
+$InactiveUsers = Get-ADUser -Filter {
+   LastLogonDate -lt $CutoffDate -and Enabled -eq $true
+} -Properties LastLogonDate,Enabled
+
+$LockedUsers = Search-ADAccount -LockedOut -UsersOnly
+$ExpiredUsers = Search-ADAccount -AccountExpired -UsersOnly
+$Report = @()
+
+foreach ($User in $InactiveUsers) {
+    $Report += [PSCustomObject]@{
+       Category = "Inactive 30+ Days"
+       Name = $User.Name
+       SamAccountName = $User.SamAccountName
+       Enabled = $User.Enabled
+       LastLogonDate = $User.LastLogonDate
+    }
+}
+
+foreach ($User in $LockedUsers) {
+    $Report += [PSCustomObject]@{
+        Category = "Locked Account"
+        Name = $User.Name
+        SamAccountName = $User.SamAccountName
+        Enabled = $User.Enabled
+        LastLogonDate = $User.LastLogonDate
+    }
+}
+
+foreach ($User in $ExpiredUsers) {
+    $Report += [PSCustomObject]@{
+        Category = "Expired Account"
+        Name = $User.Name
+        SamAccountName = $User.SamAccountName
+        Enabled = $User.Enabled
+        LastLogonDate = $User.LastLogonDate
+    }
+}
+
+foreach ($User in $DisabledUsers) {
+    $Report += [PSCustomObject]@{
+        Category = "Disabled Account"
+        Name = $User.Name
+        SamAccountName = $User.SamAccountName
+        Enabled = $User.Enabled
+        LastLogonDate = $User.LastLogonDate
+    }
+}
+
+
+$Report | Format-Table -AutoSize
+$Report | Export-Csv -Path ".\ADAccountAuditReport.csv" -NoTypeInformation
+Write-Host "AD account audit complete. Report saved as ADAccountAuditReport.csv"
