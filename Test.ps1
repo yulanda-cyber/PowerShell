@@ -1,0 +1,2 @@
+
+get-eventlog -logname system -newest 3
