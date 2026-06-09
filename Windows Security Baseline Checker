@@ -1,0 +1,43 @@
+$ComputerName = $env:COMPUTERNAME
+$OSInfo = Get-CimInstance -ClassName Win32_OperatingSystem
+$FirewallProfiles = Get-NetFirewallProfile
+$Disk = Get-CimInstance -ClassName Win32_LogicalDisk -Filter "DeviceID= 'C:'"
+$LocalAdmins = Get-LocalGroupMember -Group "Administrators"
+
+$Report = @()
+
+$Report += [PSCustomObject]@{
+    CheckName = "Computer Name"
+    Result = $ComputerName
+}
+
+$Report += [PSCustomObject]@{
+    CheckName = "Operating System"
+    Result = $OSInfo.Caption
+}
+
+$Report += [PSCustomObject]@{
+    CheckName = "OS Version"
+    Result = $OSInfo.Version
+}
+
+$Report += [PSCustomObject]@{
+    CheckName = "C Drive Free Space GB"
+    Result = [math]::Round($Disk.FreeSpace / 1GB, 2)
+}
+
+foreach ($FirewallProfile in $FirewallProfiles) {
+    $Report += [PSCustomObject]@{
+        CheckName = "$($FirewallProfile.Name) Firewall Enabled"
+        Result =$FirewallProfile.Enabled
+    }
+}
+
+foreach ($Admin in $LocalAdmins) {
+    $Report += [PSCustomObject]@{
+        CheckName = "Local Administrator"
+        Result = $Admin.Name
+    }
+}
+
+$Report | Format-Table -AutoSize
