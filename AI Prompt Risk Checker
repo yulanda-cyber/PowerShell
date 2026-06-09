@@ -1,0 +1,67 @@
+# AI Prompt Risk Checker
+# This script reviews a text file of AI prompts and flags possible privacy, security, or compliance risks.
+
+$Date = Get-Date -Format "yyyy-MM-dd"
+$PromptFile = ".\prompts.txt"
+$ReportFolder = ".\Reports"
+$ReportPath = "$ReportFolder\AIPromptRiskReport-$Date.csv"
+
+$RiskKeywords = @(
+        "password",
+            "ssn",
+                "social security",
+                    "credit card",
+                        "confidential",
+                            "secret",
+                                "medical",
+                                    "patient",
+                                        "private key",
+                                            "api key",
+                                                "token"
+)
+
+if (!(Test-Path $ReportFolder)) {
+        New-Item -Path $ReportFolder -ItemType Directory
+}
+
+if (!(Test-Path $PromptFile)) {
+        Write-Host "prompts.txt was not found. Please create a prompts.txt file and try again."
+            exit
+}
+
+$Prompts = Get-Content $PromptFile
+$Report = @()
+
+foreach ($Prompt in $Prompts) {
+        $MatchedKeywords = @()
+
+            foreach ($Keyword in $RiskKeywords) {
+                        if ($Prompt.ToLower().Contains($Keyword.ToLower())) {
+                                        $MatchedKeywords += $Keyword        }
+            }
+
+                if ($MatchedKeywords.Count -gt 0) {
+                            $RiskLevel = "Review Needed"
+                                    $Finding = $MatchedKeywords -join ", "
+                }
+                    else {
+                                $RiskLevel = "No Keyword Match"
+                                        $Finding = "None"
+                    }
+
+                        $Report += [PSCustomObject]@{
+                    PromptText      = $Prompt
+                    RiskLevel       = $RiskLevel
+                    MatchedKeywords = $Finding
+                    DateChecked     = $Date
+                }
+}
+
+$Report | Format-Table -AutoSize
+
+$Report | Export-Csv -Path $ReportPath -NoTypeInformation
+
+Write-Host "`nAI prompt risk check complete."
+Write-Host "Report saved to: $ReportPath"
+Write-Host "`nAI prompt risk check complete."
+Write-Host "Report saved to: $ReportPath"

@@ -32,8 +32,8 @@ $PromptPath = "$ReportFolder\AIReviewPrompt - $Date.txt"
 "" | Out-File $ReportPath -Append
 
 "Firewall Status" | Out-File $ReportPath -Append
-foreach ($Profile in $FirewallProfiles) {
-"$($Profile.Name) Firewall Enabled: $($Profile.Enabled)" | Out-File $ReportPath -Append
+foreach ($FirewallProfile in $FirewallProfiles) {
+    "$($FirewallProfile.Name) Firewall Enabled: $($FirewallProfile.Enabled)" | Out-File $ReportPath -Append
 }
 "" | Out-File $ReportPath -Append
 
