@@ -195,6 +195,50 @@ I built this project to practice PowerShell automation while connecting it to my
 
 
 
+# AI Prompt Risk Checker
+
+## Project Overview
+
+This project uses PowerShell to review a text file of AI prompts and flag possible privacy, security, or compliance risks. The script searches for risky keywords such as passwords, Social Security numbers, confidential data, API keys, and medical information.
+
+## Purpose
+
+The purpose of this project is to connect PowerShell automation with AI governance and compliance. As organizations use AI tools, it is important to reduce the chance of sensitive information being shared in prompts. This script provides a simple way to review prompts before they are used.
+
+## Tools Used
+
+- PowerShell
+- Visual Studio Code
+- GitHub
+- Text files
+- CSV reporting
+
+## Features
+- Reads prompts from a text file
+- Checks each prompt for risky keywords
+- Flags prompts that may need review
+- Displays results on screen
+- Exports results to a CSV report
+- Creates a Reports folder automatically
+
+## Why I Built This
+
+I built this project to practice PowerShell scripting while exploring my interest in AI governance and compliance. The project demonstrates how automation can support safer AI usage by identifying prompts that may contain sensitive information.
+
+## Future Improvements
+
+- Add more risk categories
+- Add pass/fail scoring
+- Add an HTML report
+- Add recommended safer prompt wording
+- Add logging
+- Add support for scanning multiple files
+
+
+
+
+
+
 ## Important Note
 
 These projects iare for learning and lab use. They should be tested before being used in a production environment.
