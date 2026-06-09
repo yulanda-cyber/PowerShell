@@ -1,0 +1,63 @@
+# AI-Ready Windows System Report Generator
+# This script collects basic Windows system information and creates a report for review.
+
+$ComputerName = $env:COmputerName
+$Date = Get-Date -Format "yyyy-mm-dd"
+$ReportFolder = ".\Reports"
+
+if (!(Test-Path $ReportFolder)) {
+    New-Item -Path $ReportFolder -ItemType Directory
+}
+
+$OSInfo = Get-CimInstance -ClassName Win32_OperatingSystem
+$Disk = Get-CimInstance -ClassName Win32_LogicalDisk -Filter "DeviceID='C:'"
+$FirewallProfiles = Get-NetFirewallProfile
+$LocalAdmins = Get-LocalGroupMember -Group "Administrators"
+
+$ReportPath = "$ReportFolder\AIReadySystem - $Date.txt"
+$PromptPath = "$ReportFolder\AIReviewPrompt - $Date.txt"
+
+"AI-Ready Windows System Report" | Out-File $ReportPath
+"Date Checked: $Date" | Out-File $ReportPath -Append
+"Computer Name: $ComputerName" | Out-File $ReportPath -Append
+"Operating System: $($OSInfo.Caption)" | Out-File $ReportPath -Append
+"OS Version: $($OSInfo.Version)" | Out-File $ReportPath -Append
+"Last Boot Time: $($OSInfo.LastBootUpTime)" | Out-File $ReportPath -Append
+"" | Out-File $ReportPath -Append
+
+"Disk Information" | Out-File $ReportPath -Append
+"Drive: $($Disk.DeviceID)" | Out-File $ReportPath -Append
+"Size GB: $([math]::Round(($Disk.Size / 1GB), 2))" | Out-File $ReportPath -Append
+"Free Space GB: $([math]::Round(($Disk.FreeSpace / 1GB), 2))" | Out-File $ReportPath -Append
+"" | Out-File $ReportPath -Append
+
+"Firewall Status" | Out-File $ReportPath -Append
+foreach ($Profile in $FirewallProfiles) {
+"$($Profile.Name) Firewall Enabled: $($Profile.Enabled)" | Out-File $ReportPath -Append
+}
+"" | Out-File $ReportPath -Append
+
+"Local Administrators" | Out-File $ReportPath -Append
+foreach ($Admin in $LocalAdmins) {
+"$($Admin.Name)" | Out-File $ReportPath -Append
+}
+
+$AIPrompt = @"
+You are reviewing a Windows system report.
+
+Please analyze the report:
+1.Possible security concerns
+2.Possible compliance concerns
+3.System maintenance concerns
+4.Recommended next steps for a junior system administrator
+
+Use clear language and explain your reasoning.
+
+Paste the system report below this line:
+"@
+
+$AIPrompt | Out-File $PromptPath
+
+Write-Host "AI-ready system report created"
+Write-Host "Report saved to: $ReportPath"
+Write-Host "AI review prompt saved to: $PromptPath"
