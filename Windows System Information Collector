@@ -1,0 +1,23 @@
+$COMPUTERNAME = Read-Host "Enter the remote computer name"
+
+$Report = [PSCustomObject]@{
+    Computer = $ComputerName
+    OS = (Get-CimInstance -ClassName Win32_OperatingSystem -ComputerName $ComputerName). Caption
+    LastBootTime = (Get-CimInstance -ClassName Win32_OperatingSystem -ComputerName $ComputerName).LastBootUpTime
+}
+
+$DiskInfo = Get-CimInstance -ClassName Win32_LogicalDisk -ComputerName $ComputerName -Filter "DriveType" |
+Select-Object DeviceID,
+@{Name="sizeGB";Expression={[math]}::Round($_.FreeSpace / 1GB, 2)}
+
+$NetworkInfo = Get-CimInstance -ClassName Win32_Printer -ComputerName $ComputerName |
+Select-Object Name, Default
+
+Write-Host "`nComputer Summary"
+$Report | Format-List
+
+Write-Host "`nDisk Information"
+$DiskInfo | Format-Table -AutoSize
+
+Write-Host "`nInstalled Printers"
+$Printers | Format-Table -AutoSize
