@@ -148,6 +148,52 @@ System administrators often need to monitor disk space and identify files that m
 
 
 
+# AI-Ready Windows System Report Generator
+
+## Project Overview
+This project uses PowerShell to collect basic Windows system and security information, then formats the results into a text report that can be reviewed by an AI assistant.
+
+## Purpose
+
+The purpose of this project is to combine Windows administration, PowerShell automation, and AI-assisted analysis. The script gathers system information such as operating system details, disk space, firewall status, and local administrator accounts. It also creates an AI review prompt that can be used to analyze the report for security, compliance, and maintenance concerns.
+
+## Tools Used
+
+- PowerShell
+- Windows Server or Windows client
+- Visual Studio Code
+- GitHub
+- AI-assisted review workflow
+
+## Features
+
+- Collects computer name
+- Collects operating system and version
+- Checks last boot time
+- Checks C: drive size and free space
+- Checks Windows Firewall profile status
+- Lists local administrators
+- Creates a system report
+- Creates an AI review prompt
+
+## Why I Built This
+
+I built this project to practice PowerShell automation while connecting it to my interest in AI governance and compliance. This project shows how system data can be collected in a structured way and prepared for AI-assisted review, documentation, and decision support.
+
+## Future Improvements
+
+- Export the report as HTML
+- Add Windows Update status
+- Add antivirus status
+- Add pass/fail checks
+- Add remote computer support
+- Add Azure VM support
+- Add a risk rating system
+
+
+
+
+
 
 ## Important Note
 
