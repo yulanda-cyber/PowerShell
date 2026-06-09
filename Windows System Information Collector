@@ -1,23 +1,38 @@
-$COMPUTERNAME = Read-Host "Enter the remote computer name"
+$ComputerName = Read-Host "Enter the remote computer name"
+
+$OSInfo = Get-CimInstance -ClassName Win32_OperatingSystem -ComputerName $ComputerName
 
 $Report = [PSCustomObject]@{
     Computer = $ComputerName
-    OS = (Get-CimInstance -ClassName Win32_OperatingSystem -ComputerName $ComputerName). Caption
-    LastBootTime = (Get-CimInstance -ClassName Win32_OperatingSystem -ComputerName $ComputerName).LastBootUpTime
+    OS = $OSInfo.Caption
+    LastBootTime = $OSInfo.LastBootUpTime
 }
 
-$DiskInfo = Get-CimInstance -ClassName Win32_LogicalDisk -ComputerName $ComputerName -Filter "DriveType" |
-Select-Object DeviceID,
-@{Name="sizeGB";Expression={[math]}::Round($_.FreeSpace / 1GB, 2)}
+$DiskInfo = Get-CimInstance -ClassName Win32_LogicalDisk -ComputerName $ComputerName -Filter "DriveType=3"
 
-$NetworkInfo = Get-CimInstance -ClassName Win32_Printer -ComputerName $ComputerName |
+$DiskReport = foreach ($Disk in $DiskInfo) {
+    [PSCustomObject]@{
+       Drive = $Disk.DeviceID
+       SizeGB = [math]::Round(($Disk.Size / 1GB), 2)
+       FreeSpaceGB = [math]::Round(($Disk.FreeSpace / 1GB), 2)
+     }
+ }
+
+$Printers = Get-CimInstance -ClassName Win32_Printer -ComputerName $ComputerName |
 Select-Object Name, Default
-
+ 
 Write-Host "`nComputer Summary"
 $Report | Format-List
 
 Write-Host "`nDisk Information"
-$DiskInfo | Format-Table -AutoSize
+$DiskReport | Format-Table -AutoSize
 
 Write-Host "`nInstalled Printers"
 $Printers | Format-Table -AutoSize
+
+$Report | Export-Csv -Path ".\$ComputerName-InfoReport.csv" -NoTypeInformation
+$DiskReport | Export-Csv -Path ".\$ComputerName-DiskReport.csv" -NoTypeInformation
+$Printers | Export-Csv -Path ".\$ComputerName-PrinterReport.csv" -NoTypeInformation
+
+Write-Host "System information collection complete. Reports saved for $ComputerName."
+

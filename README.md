@@ -33,3 +33,9 @@ Add a menu for selecting specific audit checks
 Add error handling
 Create an HTML version of the report
 Add comments and help documentation inside script 
+
+
+# Windows System Information Collector
+
+This project uses Powershell to collect basic system information from a windows computer, including operating system details, disk space, network adapter information, 
+IP address, installed printers, and last reboot time. The goal is to automate common information-gathering tasks used in windows administration and troubleshooting.
