@@ -35,11 +35,12 @@ Create an HTML version of the report
 Add comments and help documentation inside script 
 
 
+
+
 # Windows System Information Collector
 
 This project uses Powershell to collect basic system information from a windows computer, including operating system details, disk space, network adapter information, 
 IP address, installed printers, and last reboot time. The goal is to automate common information-gathering tasks used in windows administration and troubleshooting.
-
 
 
 
@@ -85,6 +86,69 @@ I built this project to practice PowerShell automation for Windows administratio
 - Add pass/fail results for each security check
 - Add support for remote computers
 
+
+
+
+# Windows Disk Cleanup Report
+
+## Project Overview
+
+This project uses PowerShell to automate a basic disk cleanup review for a Windows computer. The script checks available disk space, identifies the top 15 largest files in the user profile, and reports files in the Downloads folder that are older than 60 days.
+
+## Purpose
+System administrators often need to monitor disk space and identify files that may be using unnecessary storage. This script helps automate the reporting process so an administrator can review disk usage before deleting or moving files.
+
+## Tools Used
+
+- PowerShell
+- Windows Server or Windows client
+- Visual Studio Code
+- GitHub
+
+## Features
+
+ - Checks C: drive size and free space
+ - Finds the top 15 largest files
+ - Finds Downloads files older than 60 days
+ - Displays results on screen
+ - Exports reports to CSV files
+ - Creates a Reports folder automatically
+ 
+ ## Why I Built This
+ 
+ I built this project to practice PowerShell automation for Windows administration tasks. It connects to system administration and cloud operations because storage monitoring is important for performance, availability, and troubleshooting.
+ 
+ ## Safety Note
+ 
+ This version only creates reports. It does not delete files. This allows an administrator to review the results before taking cleanup action.
+ 
+ ## Future Improvements
+ 
+ - Add an option to delete selected files after confirmation
+ - Add an HTML report
+ - Add support for scanning remote computers
+ - Add warning levels for low disk space the reporting process so an administrator can review disk usage before deleting or moving files.
+ 
+ ## Tools Used
+ 
+ - PowerShell
+ - Windows Server or Windows client
+ - Visual Studio Code
+ - GitHub
+ 
+ ## Features
+ 
+ - Checks Ct files in the user profile, and reports files in the Downloads folder that are older than 60 days.
+
+## Purpose
+System administrators often need to monitor disk space and identify files that may be using unnecessary storage. This script helps automate
+
+
+
+
+
+
+
 ## Important Note
 
-This project is for learning and lab use. It should be tested before being used in a production environment.
+These projects iare for learning and lab use. They should be tested before being used in a production environment.
