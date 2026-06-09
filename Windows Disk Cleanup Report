@@ -1,0 +1,59 @@
+# Windows Disk Cleanup Report
+# This script checks disk space and reports large or old files.
+
+$ComputerName = $env:COMPUTERNAME
+$Date = Get-Date -Format "yyyy-MM-dd"
+
+$DownloadsPath = "$env:USERPROFILE\Downloads"
+$ReportFolder = ".\Reports"
+
+if (!(Test-Path $ReportFolder)) {
+    New-Item -Path $ReportFolder -ItemType Directory
+    }
+
+    $Disk = Get-CimInstance -ClassName Win32_LogicalDisk -Filter "DeviceID='C:'"
+
+    $DiskReport = [PSCustomObject]@{
+        ComputerName = $ComputerName
+            Drive = $Disk.DeviceID
+                SizeGB = [math]::Round(($Disk.Size / 1GB), 2)
+                    FreeSpaceGB = [math]::Round(($Disk.FreeSpace / 1GB), 2)
+                        DateChecked = $Date}
+
+                        $LargeFilesRaw = Get-ChildItem -Path $env:USERPROFILE -Recurse -File -ErrorAction SilentlyContinue |
+                        Sort-Object Length -Descending |
+                        Select-Object -First 15
+
+                        $LargeFiles = foreach ($File in $LargeFilesRaw) {
+                            [PSCustomObject]@{
+                                    Name = $File.Name
+                                            FullName = $File.FullName
+                                                    SizeMB = [math]::Round(($File.Length / 1MB), 2)
+                                                        }
+                                                        }
+
+                                                        $OldDownloadsRaw = Get-ChildItem -Path $DownloadsPath -File -ErrorAction SilentlyContinue |
+                                                        Where-Object { $_.LastWriteTime -lt (Get-Date).AddDays(-60) }
+
+                                                        $OldDownloads = foreach ($File in $OldDownloadsRaw) {
+                                                            [PSCustomObject]@{
+                                                                    Name = $File.Name
+                                                                            FullName = $File.FullName
+                                                                                    LastWriteTime = $File.LastWriteTime
+                                                                                            SizeMB = [math]::Round(($File.Length / 1MB), 2)
+                                                                                                }
+                                                                                                }
+
+                                                                                                Write-Host "`nDisk Summary"
+                                                                                                $DiskReport | Format-List
+
+                                                                                                Write-Host "`nTop 15 Largest Files"
+                                                                                                $LargeFiles | Format-Table -AutoSize
+
+                                                                                                Write-Host "`nDownloads Files Older Than 60 Days"
+                                                                                                $OldDownloads | Format-Table -AutoSize
+
+                                                                                                $DiskReport | Export-Csv -Path "$ReportFolder\DiskSummary-$Date.csv" -NoTypeInformation
+                                                                                                $LargeFiles | Export-Csv -Path "$ReportFolder\LargeFiles-$Date.csv" -NoTypeInformation
+                                                                                                $OldDownloads | Export-Csv -Path "$ReportFolder\OldDownloads-$Date.csv" -NoTypeInformation
+                                                                                                Write-Host "`nDisk cleanup report complete. Reports saved in the Reports folder."
