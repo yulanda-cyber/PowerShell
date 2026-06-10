@@ -1,0 +1,4 @@
+Question,OptionA,OptionB,OptionC,OptionD,CorrectAnswer,Topic
+"What is the purpose of Azure Policy?","To estimate cloud costs","To enforce rules and compliance for resources","To create virtual machines","To monitor application code","B","Governance"
+"What does RBAC control in Azure?","Network speed","User permissions and access","Storage replication","Monthly billing","B","Identity and Access"
+"What does the Azure Pricing Calculator help estimate?","Future exam scores","Expected Azure service costs","User login attempts","Firewall rules","B","Cost Management"
