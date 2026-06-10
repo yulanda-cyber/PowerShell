@@ -235,6 +235,83 @@ I built this project to practice PowerShell scripting while exploring my interes
 - Add support for scanning multiple files
 
 
+# AI-Ready Event Log Triage Report
+
+## Project Overview
+This project uses PowerShell to collect recent Windows Event Log errors and warnings from the System and Application logs. The script exports the results to a CSV report and creates an AI review prompt that can be used to help summarize possible issues and troubleshooting steps.
+
+## Purpose
+Windows administrators often review event logs when troubleshooting system issues. Manually reviewing logs can take time, especially when there are many warnings or errors. This project automates part of that process by collecting recent events and organizing them into a report.
+
+The project also connects Windows administration with AI-assisted analysis by creating a prompt file that can be used to review the event log report.
+
+## Tools Used
+
+* PowerShell
+* Windows Server or Windows client
+* Windows Event Viewer logs
+* PowerShell ISE or Visual Studio Code
+* GitHub
+* CSV reporting
+* AI-assisted review workflow
+
+## Features
+
+* Collects recent Windows event log entries
+* Searches the System and Application logs
+* Filters for errors and warnings
+* Limits results to the most recent 50 events
+* Exports findings to a CSV report
+* Creates an AI review prompt as a text file
+* Saves output files in a Reports folder
+
+## Files Created
+
+The script creates a Reports folder and saves output files such as:
+
+* `EventLogTriageReport-yyyy-MM-dd.csv`
+* `EventLogAIReviewPrompt-yyyy-MM-dd.txt`
+
+## How $
+The script checks the last 7 days of Windows event logs and collects events with warning or error levels. It then exports selected details such as:
+
+* Time created
+* Log name
+* Provider name
+* Event ID
+* Severity level
+* Message
+
+The script also creates a text file containing an AI review prompt. The prompt can be copied into an AI assistant along with the event log report to help identify patterns, possible causes, and recommended next steps.
+
+## Why I Built This
+
+I built this project to practice PowerShell automation for Windows administration and troubleshooting. It also connects to my interest in AI governance and compliance by showing how system data can be collected, documented, and prepared for AI-assisted review.
+
+This project demonstrates safe automation because it only reads event logs and creates reports. It does not delete logs, restart systems, or make configuration changes.
+
+## Example Use Case
+
+A junior system administrator could run this script during troubleshooting to quickly gather recent warnings and errors from a Windows computer. The CSV report can be reviewed manually, shared with a team member, or used with the AI prompt to assist with summarizing possible issues.
+
+## Safety Note
+
+This script is designed for lab and learning purposes. It only collects information and creates reports. It does not make changes to the system.
+
+## Future Improvements
+
+* Add support for Security logs
+* Add a menu to select which logs to review
+* Add HTML report output
+* Add event severity counts
+* Add pass/fail risk categories
+* Add remote computer support
+
+
+
+
+
+
 
 
 

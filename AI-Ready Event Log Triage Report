@@ -1,0 +1,50 @@
+# AI-Ready Event Log Triage Report
+# This script collects recent windows event log warnings and errors
+# Creates a report and AI review prompt
+
+
+
+$ComputerName = $env:COMPUTERNAME
+$Date = Get-Date -Format "yyyy-MM-dd"
+$ReportFolder = ".\Reports"
+
+if (!(Test-Path $ReportFolder)) {
+    New-Item -Path $ReportFolder -ItemType Directory
+}
+
+$CsvReportPath = "$ReportFolder\EventLogTriage-$Date.csv"
+
+$StartTime = (Get-Date).AddDays(-7)
+
+$Events = Get-WinEvent -FilterHashtable @{
+    LogName = "System", "Application"
+    Level = 2, 3
+    StartTime = $StartTime
+} -MaxEvents 50 -ErrorAction SilentlyContinue |
+Select-Object TimeCreated, LogName, ProviderName, Id, LevelDisplayName, Message
+
+$Events | Format-Table TimeCreated, LogName, ProviderName, Id, LevelDisplayName -AutoSize
+
+$Events | Export-Csv -Path $CsvReportPath -NoTypeInformation
+
+$AIPrompt = @"
+You are reviewing a windows event log triage report.
+
+Please analyze the report for:
+1.Common error patterns
+2.Possible causes
+3.Suggested troubleshooting steps
+4.Any issues that may need administrator attention
+5.A simple summary for a junior system administrator
+
+Use clear language and do not assume the issue is confirmed unless the log evidence supports it.
+
+Paste the event log report below this line:
+"@
+
+$PromptPath = "$ReportFolder\EventLogAIReviewPrompt-$Date.txt"
+$AIPrompt | Out-File $PromptPath
+
+Write-Host "'nEvent log triage report complete."
+Write-Host "CSV report saved to: $CsvReportPath"
+Write-Host "AI review prompt saved to: $PromptPath"
