@@ -272,7 +272,7 @@ The script creates a Reports folder and saves output files such as:
 * `EventLogTriageReport-yyyy-MM-dd.csv`
 * `EventLogAIReviewPrompt-yyyy-MM-dd.txt`
 
-## How $
+## What it does
 The script checks the last 7 days of Windows event logs and collects events with warning or error levels. It then exports selected details such as:
 
 * Time created
